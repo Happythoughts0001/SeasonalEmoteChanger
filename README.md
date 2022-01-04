@@ -14,6 +14,8 @@ Replace is which emote that should replace the Current version
 
 ### Usage
 
+`node index.js <launch flag>`
+
 To run different scripts for different sites use the launch flags
 
 ```
@@ -21,3 +23,5 @@ To run different scripts for different sites use the launch flags
 -BTTV
 -FFZ
 ```
+
+It only handles the first launch flag you write so `node index.js -7TV -BTTV` will currently not work

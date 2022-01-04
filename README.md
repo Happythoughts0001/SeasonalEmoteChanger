@@ -1,4 +1,4 @@
-# Twitch-VOD-music-sync
+# Seasonal Emote Changer
 
 Uses Puppeteer to scrape some of the websites then clicks buttons to make it all work.
 

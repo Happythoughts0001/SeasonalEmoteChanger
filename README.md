@@ -27,4 +27,4 @@ To run different scripts for different sites use the launch flags
 -SETUP
 ```
 
-It only handles the first launch flag you write so `node index.js -7TV -BTTV` will currently not work
+It only handles the first launch flag you write, so `node index.js -7TV -BTTV` will currently not work

@@ -2,7 +2,24 @@ const csv = require("csv-parser");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const fetch = require("node-fetch");
+const userData = require("./websiteData.json");
 const results = [];
+
+//Opens all tabs so you can login before scripts are being ran
+async function firstTimeSetup() {
+    const path =
+        process.env.LOCALAPPDATA + "\\Google\\Chrome\\User Data\\Default";
+    const browser = await puppeteer.launch({
+        headless: false,
+        args: [`--user-data-dir=${path}`],
+    });
+    const page = await browser.newPage();
+    await page.goto("https://www.frankerfacez.com/");
+    const page2 = await browser.newPage();
+    await page2.goto("https://7tv.app/");
+    const page3 = await browser.newPage();
+    await page3.goto("https://betterttv.com/");
+}
 
 //Clicks the BTTV buttons
 async function BTTVStuff() {
@@ -202,7 +219,7 @@ async function FFZStuff() {
 }
 
 //Tries to use fetch with FFZ instead of just clicking the buttons
-async function fetchThing() {
+async function fetchThing(channel, usedChannel) {
     let data;
     const channels = {
         Penk: "903419",
@@ -282,7 +299,6 @@ async function fetchThing() {
                         method: "GET",
                     }
                 ).then(() => {
-                    await page.waitForNetworkIdle();
                     console.log(`Adding: ${results[index].Replace}`);
                 });
             });
@@ -307,10 +323,9 @@ switch (process.argv[2]) {
     case "-FETCH":
         fetchThing();
         break;
+    case "-SETUP":
+        firstTimeSetup();
+        break;
     default:
         break;
 }
-/* 
-Link to the existing emote -> unlink -> link to new emote -> add it to channel
-webcrawl emote page for emote name -> click on emote -> unlink emote -> add new emote
-*/

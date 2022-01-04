@@ -150,7 +150,7 @@ async function sevenTVStuff() {
     await browser.close();
 }
 
-//Clicks the buttons on FFZ
+//Uses fetch for updating emotes
 async function FFZStuff() {
     let data;
     const channels = {

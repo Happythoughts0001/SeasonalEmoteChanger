@@ -4,6 +4,7 @@ const fs = require("fs");
 const fetch = require("node-fetch");
 const results = [];
 
+//Clicks the BTTV buttons
 async function BTTVStuff() {
     const path =
         process.env.LOCALAPPDATA + "\\Google\\Chrome\\User Data\\Default";
@@ -69,6 +70,7 @@ async function BTTVStuff() {
     await browser.close();
 }
 
+//Clicks all the buttons on 7TV
 async function sevenTVStuff() {
     const path =
         process.env.LOCALAPPDATA + "\\Google\\Chrome\\User Data\\Default";
@@ -132,6 +134,7 @@ async function sevenTVStuff() {
     await browser.close();
 }
 
+//Clicks the buttons on FFZ
 async function FFZStuff() {
     const channels = {
         Penk: "PenkTynk",
@@ -198,6 +201,7 @@ async function FFZStuff() {
     await browser.close();
 }
 
+//Tries to use fetch with FFZ instead of just clicking the buttons
 async function fetchThing() {
     let data;
     const channels = {

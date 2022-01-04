@@ -2,7 +2,6 @@ const csv = require("csv-parser");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const fetch = require("node-fetch");
-const userData = require("./websiteData.json");
 const results = [];
 
 //Opens all tabs so you can login before scripts are being ran
@@ -153,73 +152,6 @@ async function sevenTVStuff() {
 
 //Clicks the buttons on FFZ
 async function FFZStuff() {
-    const channels = {
-        Penk: "PenkTynk",
-        Happy: "HappyThoughts",
-    };
-
-    const path =
-        process.env.LOCALAPPDATA + "\\Google\\Chrome\\User Data\\Default";
-    const browser = await puppeteer.launch({
-        headless: false,
-        args: [`--user-data-dir=${path}`],
-    });
-    fs.createReadStream("dataFFZ.csv")
-        .pipe(csv())
-        .on("data", (data) => results.push(data))
-        .on("end", () => {
-            console.log(results);
-        });
-
-    const page = await browser.newPage();
-
-    async function clickButtonRemove() {
-        const [button] = await page.$x(
-            `//div/a[contains(., '${channels.Happy}')]`
-        );
-        if (button) {
-            await button.click();
-        }
-    }
-    async function clickButtonAdd() {
-        const [button] = await page.$x(
-            `//div/a[contains(., '${channels.Happy}')]`
-        );
-        if (button) {
-            await button.click();
-        }
-    }
-
-    for (let index = 0; index < results.length; index++) {
-        try {
-            await page.goto(
-                `https://www.frankerfacez.com/emoticon/${results[index].Current}`
-            );
-            await page.waitForXPath(
-                `//div/a[contains(., '${channels.Happy}')]`
-            );
-            await clickButtonRemove();
-            await page.waitForNetworkIdle();
-            console.log(`Removing: ${results[index].Current}`);
-            await page.goto(
-                `https://www.frankerfacez.com/emoticon/${results[index].Replace}`
-            );
-            await page.waitForXPath(
-                `//div/a[contains(., '${channels.Happy}')]`
-            );
-            await clickButtonAdd();
-            await page.waitForNetworkIdle();
-            console.log(`Adding: ${results[index].Replace}`);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    await browser.close();
-}
-
-//Tries to use fetch with FFZ instead of just clicking the buttons
-async function fetchThing(channel, usedChannel) {
     let data;
     const channels = {
         Penk: "903419",
@@ -251,60 +183,49 @@ async function fetchThing(channel, usedChannel) {
     });
 
     for (let index = 0; index < results.length; index++) {
-        try {
-            await fetch(
-                `https://www.frankerfacez.com/emoticons/channel/False?channels=${channels.Happy}&ids=${results[index].Current}`,
-                {
-                    headers: {
-                        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                        "accept-language": "en-US,en;q=0.9",
-                        "sec-fetch-dest": "document",
-                        "sec-fetch-mode": "navigate",
-                        "sec-fetch-site": "same-origin",
-                        "sec-fetch-user": "?1",
-                        "sec-gpc": "1",
-                        "upgrade-insecure-requests": "1",
-                        cookie: `${data}`,
-                        Referer: `https://www.frankerfacez.com/emoticon/${results[index].Current}`,
-                        "Referrer-Policy": "strict-origin-when-cross-origin",
-                    },
-                    body: null,
-                    method: "GET",
-                }
-            ).then(async () => {
-                await page.goto(
-                    `https://www.frankerfacez.com/emoticon/${results[index].Current}`
-                );
-                await page.waitForNetworkIdle();
-                console.log(`Removing: ${results[index].Current}`);
+        await fetch(
+            `https://www.frankerfacez.com/emoticons/channel/False?channels=${channels.Happy}&ids=${results[index].Current}`,
+            {
+                headers: {
+                    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                    "accept-language": "en-US,en;q=0.9",
+                    "sec-fetch-dest": "document",
+                    "sec-fetch-mode": "navigate",
+                    "sec-fetch-site": "same-origin",
+                    "sec-fetch-user": "?1",
+                    "sec-gpc": "1",
+                    "upgrade-insecure-requests": "1",
+                    cookie: `remember_token=${data}`,
+                    Referer: `https://www.frankerfacez.com/emoticon/${results[index].Current}`,
+                    "Referrer-Policy": "strict-origin-when-cross-origin",
+                },
+                body: null,
+                method: "GET",
+            }
+        );
+        console.log(`Removing: ${results[index].Current}`);
 
-                await fetch(
-                    `https://www.frankerfacez.com/emoticons/channel/True?channels=${channels.Happy}&ids=${results[index].Replace}`,
-                    {
-                        headers: {
-                            accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                            "accept-language": "en-US,en;q=0.9",
-                            "sec-fetch-dest": "document",
-                            "sec-fetch-mode": "navigate",
-                            "sec-fetch-site": "same-origin",
-                            "sec-fetch-user": "?1",
-                            "sec-gpc": "1",
-                            "upgrade-insecure-requests": "1",
-                            cookie: `${data}`,
-                            Referer: `https://www.frankerfacez.com/emoticon/${results[index].Replace}`,
-                            "Referrer-Policy":
-                                "strict-origin-when-cross-origin",
-                        },
-                        body: null,
-                        method: "GET",
-                    }
-                ).then(() => {
-                    console.log(`Adding: ${results[index].Replace}`);
-                });
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        await fetch(
+            `https://www.frankerfacez.com/emoticons/channel/True?channels=${channels.Happy}&ids=${results[index].Replace}`,
+            {
+                headers: {
+                    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                    "accept-language": "en-US,en;q=0.9",
+                    "sec-fetch-dest": "document",
+                    "sec-fetch-mode": "navigate",
+                    "sec-fetch-site": "same-origin",
+                    "sec-fetch-user": "?1",
+                    "sec-gpc": "1",
+                    "upgrade-insecure-requests": "1",
+                    cookie: `remember_token=${data}`,
+                    Referer: `https://www.frankerfacez.com/emoticon/${results[index].Replace}`,
+                    "Referrer-Policy": "strict-origin-when-cross-origin",
+                },
+                body: null,
+                method: "GET",
+            }
+        );
+        console.log(`Adding: ${results[index].Replace}`);
     }
 
     await browser.close();
@@ -319,9 +240,6 @@ switch (process.argv[2]) {
         break;
     case "-FFZ":
         FFZStuff();
-        break;
-    case "-FETCH":
-        fetchThing();
         break;
     case "-SETUP":
         firstTimeSetup();

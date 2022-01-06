@@ -2,6 +2,7 @@ const csv = require("csv-parser");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const fetch = require("node-fetch");
+const FFZInfo = require("./settings.json");
 const results = [];
 
 //Opens all tabs so you can login before scripts are being ran
@@ -152,11 +153,8 @@ async function sevenTVStuff() {
 
 //Uses fetch for updating emotes
 async function FFZStuff() {
+    console.log(channels);
     let data;
-    const channels = {
-        Penk: "903419",
-        Happy: "813291",
-    };
 
     const path =
         process.env.LOCALAPPDATA + "\\Google\\Chrome\\User Data\\Default";
@@ -184,7 +182,7 @@ async function FFZStuff() {
 
     for (let index = 0; index < results.length; index++) {
         await fetch(
-            `https://www.frankerfacez.com/emoticons/channel/False?channels=${channels.Happy}&ids=${results[index].Current}`,
+            `https://www.frankerfacez.com/emoticons/channel/False?channels=${FFZInfo.Channel}&ids=${results[index].Current}`,
             {
                 headers: {
                     accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -206,7 +204,7 @@ async function FFZStuff() {
         console.log(`Removing: ${results[index].Current}`);
 
         await fetch(
-            `https://www.frankerfacez.com/emoticons/channel/True?channels=${channels.Happy}&ids=${results[index].Replace}`,
+            `https://www.frankerfacez.com/emoticons/channel/True?channels=${FFZInfo.Channel}&ids=${results[index].Replace}`,
             {
                 headers: {
                     accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",

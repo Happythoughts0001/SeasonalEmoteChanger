@@ -28,3 +28,5 @@ To run different scripts for different sites use the launch flags
 ```
 
 It only handles the first launch flag you write, so `node index.js -7TV -BTTV` will currently not work
+
+settings.json handles which FFZ account you want to use. Just replace the value after "Channel"

@@ -72,7 +72,6 @@ async function BTTVStuff() {
             );
             await clickButtonRemove();
             console.log(`Removing: ${results[index].Current}`);
-            await delay(2000);
             await page.goto(
                 `https://betterttv.com/emotes/${results[index].Replace}`
             );
